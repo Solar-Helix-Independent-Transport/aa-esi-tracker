@@ -46,7 +46,7 @@
                                 <p class="m-0 me-3">{{stat.first|date:'Y-m-d'}}</p>
                                     {% for date, status in stat.updates.items %}
                                         <div 
-                                            style="height:2em;border-radius: 30%;" 
+                                            style="height:2em;border-radius: 3px;" 
                                             class="bg-{% if status.o >= 2.5 %}success{% elif status.o >= 1.5 %}warning{% else %}danger{% endif %} flex-grow-1" 
                                             data-bs-toggle="tooltip" 
                                             data-bs-html="true"

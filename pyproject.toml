@@ -1,0 +1,50 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [
+    "hatchling",
+]
+
+[project]
+name = "aa-esi-tracker"
+description = "ESI Endpoint Status Tracker"
+readme = "README.md"
+keywords = [
+    "allianceauth",
+    "example",
+]
+license = { file = "LICENSE" }
+authors = [
+    { name = "Aaron Kable", email = "aaronkable@gmail.com" },
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+dynamic = [
+    "version",
+]
+dependencies = [
+    "allianceauth<5,>=4.3.1",
+]
+urls.Changelog = "https://github.com/ppfeufer/aa-est-tracker/blob/master/CHANGELOG.md"
+urls."Issue / Bug Reports" = "https://github.com/ppfeufer/aa-est-tracker/issues"
+
+[tool.hatch.version]
+path = "esi_tracker/__init__.py"
+
+[tool.hatch.build]
+include = [
+    "/esi_tracker",
+]

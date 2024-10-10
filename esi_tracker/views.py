@@ -24,7 +24,7 @@ def index(request: WSGIRequest) -> HttpResponse:
     """
 
     context = {"text": "Hello, World!"}
-    start = timezone.now() - timedelta(hours=24*30)
+    start = timezone.now() - timedelta(hours=24*90)
     updates = ESIEndpointStatus.objects.filter(
         date__gte=start
     ).order_by(
@@ -52,6 +52,12 @@ def index(request: WSGIRequest) -> HttpResponse:
                     "y": 0,
                     "r": 0,
                 }
+
+        if data[u.endpoint.tag]["endpoints"][u.endpoint.route]["first"] > u.date:
+             data[u.endpoint.tag]["endpoints"][u.endpoint.route]["first"] = u.date
+        if data[u.endpoint.tag]["endpoints"][u.endpoint.route]["last"] < u.date:
+             data[u.endpoint.tag]["endpoints"][u.endpoint.route]["last"] = u.date
+             
         data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["t"] += 1
         if u.status == ESIStatus.RED:
              data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["r"] +=1
@@ -59,6 +65,7 @@ def index(request: WSGIRequest) -> HttpResponse:
              data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["y"] +=1
         elif  u.status == ESIStatus.GREEN:
              data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["g"] +=1
+        
         
         o = data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["o"]
         t = data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["t"]

@@ -15,7 +15,7 @@ from .enums import ESIStatus
 
 from django.views.decorators.cache import cache_page
 
-@cache_page(60*5)
+@cache_page(60*4.9)
 def index(request: WSGIRequest) -> HttpResponse:
     """
     Index view

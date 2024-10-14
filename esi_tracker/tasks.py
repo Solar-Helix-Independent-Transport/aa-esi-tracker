@@ -2,10 +2,13 @@
 
 # Standard Library
 import logging
+import requests
 
 # Third Party
 from celery import shared_task
 from django.utils import timezone
+from django.conf import settings
+
 from requests import get
 
 from .models import ESIEndpoint, ESIEndpointStatus
@@ -37,3 +40,5 @@ def esi_status_snapshot():
             )
     
     ESIEndpointStatus.objects.bulk_create(updates)
+
+    requests.get(f"{settings.SITE_URL}/esit")

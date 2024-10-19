@@ -3,6 +3,8 @@
 {% load humanize %}
 {% block page_title %}ESI Status{% endblock %}
 {% block content %}
+    <h1 class="m-3 text-center">ESI Status</h1>
+    <p class="m-3 text-center">As reported by the status endpoint</p>
     <div class="card m-3 mx-auto" style="max-width: 38em;" >
         <div class="card-body">
             <div class="d-flex" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Default tooltip1">
@@ -27,30 +29,39 @@
             </figure>
         </div>
     </div>
-
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckRed" checked>
-        <label class="form-check-label" for="flexCheckRed">
-          Show Red Endpoints
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckYellow" checked>
-        <label class="form-check-label" for="flexCheckYellow">
-          Show Yellow Endpoints
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckGreen" checked>
-        <label class="form-check-label" for="flexCheckGreen">
-          Show Green Endpoints
-        </label>
-    </div>
-      
     <div class="m-3 mx-auto" style="max-width: 1500px;" >
+        <div class="card m-3">
+            
+            <div class="card-body text-center">
+                <h4>Filters</h4>
+                <p class="m-3 text-center">Overall satus averaged over time period</p>
+                <div class="d-flex flex-row justify-content-around">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckRed" checked>
+                        <label class="form-check-label" for="flexCheckRed">
+                        Show Red Endpoints
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckYellow" checked>
+                        <label class="form-check-label" for="flexCheckYellow">
+                        Show Yellow Endpoints
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckGreen" checked>
+                        <label class="form-check-label" for="flexCheckGreen">
+                        Show Green Endpoints
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-3 mx-auto text-center" style="max-width: 1500px;" >
         {% for key, item in data.items %}
             <div class="card m-3 endpoint-block " id="{{item.name|slugify }}">
-                <div class="card-header"><h4>{{item.name}}</h4></div>
+                <div class="card-body"><h4>{{item.name}}</h4></div>
                 <div class="card-body w-100">
                     {% for ep, stat in item.endpoints.items %}
                         <div class="stat-{{stat.o|floatformat:'0'}} endpoint " id="{{ep|slugify }}">

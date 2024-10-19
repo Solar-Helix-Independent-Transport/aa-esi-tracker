@@ -7,10 +7,13 @@ from esi_tracker.enums import ESIStatus
 from esi_tracker.models import ESIEndpointStatus
 
 def build_dict():
-    start = timezone.now() - timedelta(hours=24*90)
+    start = timezone.now() - timedelta(hours=24*14)
     updates = ESIEndpointStatus.objects.filter(
         date__gte=start
-    ).select_related("endpoint")
+    ).select_related("endpoint").order_by(
+        "endpoint__tag",
+        "endpoint__route"
+    )
     data = OrderedDict()
     for u in updates:
         if u.endpoint.tag not in data:

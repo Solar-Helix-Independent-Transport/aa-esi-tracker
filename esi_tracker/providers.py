@@ -77,4 +77,4 @@ class DataProvider:
     
     @classmethod
     def set(cls):
-        cache.set(cls.cache_tag, lambda: build_dict(), cls.timeout)
+        cache.set(cls.cache_tag, build_dict(), cls.timeout)

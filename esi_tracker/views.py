@@ -27,6 +27,6 @@ def index(request: WSGIRequest) -> HttpResponse:
     return HttpResponse(page)
 
 def index2(request: WSGIRequest) -> HttpResponse:
-
-    esi_status_snapshot.delay()
-    return redirect("/esit")
+    if request.user.is_superuser:
+        esi_status_snapshot.delay()
+    return redirect("index")

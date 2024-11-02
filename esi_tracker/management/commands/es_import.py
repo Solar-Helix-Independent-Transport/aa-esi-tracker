@@ -63,8 +63,8 @@ class Command(BaseCommand):
                 if count_data > updated+4999:
                     self.stdout.write(f"Completed: {count_data}/{total}")
                     updated = count_data
-
-            ESIEndpointStatus.objects.bulk_create(ops)
+                    ESIEndpointStatus.objects.bulk_create(ops)
+                    ops = []
 
         self.stdout.write(
             (

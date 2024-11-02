@@ -3,27 +3,40 @@ import csv
 from django.core.management.base import BaseCommand
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
-from esi_tracker.models import ESIEndpointStatus
+from esi_tracker.models import ESIEndpoint, ESIEndpointStatus
 class Command(BaseCommand):
-    help = 'EXport esit from esi'
+    help = 'Export esit from esi'
 
     def handle(self, *args, **options):
         self.stdout.write("Exporting All of ESIT updates to CSV")
-        count = 0
-        with open("esit.csv", 'w') as myfile:
+        count_ep = 0
+        with open("esit-e.csv", 'w') as myfile:
             wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-            wr.writerow(["date", "status", "endpoint", "method", "route", "tag"])
-            for es in ESIEndpointStatus.objects.all().select_related("endpoint"):
+            wr.writerow(["pk", "endpoint", "method", "route", "tag"])
+            for es in ESIEndpoint.objects.all():
                 wr.writerow(
                     [
-                        es.date,
-                        es.status,
-                        es.endpoint.endpoint,
-                        es.endpoint.method,
-                        es.endpoint.route,
-                        es.endpoint.tag
+                        es.pk,
+                        es.endpoint,
+                        es.method,
+                        es.route,
+                        es.tag
                     ]
                 )
-                count += 1
+                count_ep += 1
 
-        self.stdout.write(f"exported {count} rows successfully to esit.csv!")
+        count_s = 0
+        with open("esit-s.csv", 'w') as myfile:
+            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+            wr.writerow(["epid", "date", "status"])
+            for es in ESIEndpointStatus.objects.all():
+                wr.writerow(
+                    [
+                        es.endpoint_id,
+                        es.date,
+                        es.status
+                    ]
+                )
+                count_s += 1
+
+        self.stdout.write(f"Exported ep:{count_ep} s:{count_s} Rows successfully to csv!")

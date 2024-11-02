@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.utils import timezone
 from esi_tracker.enums import ESIStatus
 from esi_tracker.models import ESIEndpointStatus
+from django.template.loader import render_to_string
 
 def build_dict():
     start = timezone.now() - timedelta(hours=24*14)
@@ -78,3 +79,18 @@ class DataProvider:
     @classmethod
     def set(cls):
         cache.set(cls.cache_tag, build_dict(), cls.timeout)
+
+    @classmethod
+    def get_set_page_cache(cls):
+        page = cache.get(f"{cls.cache_tag}_html")
+        if not page:
+            data = cls.get()
+            context = {"text": "Hello, World!"}
+            context["data"] = data
+
+            rendered = render_to_string("esi_tracker/index.html", context)
+
+            cache.set(f"{cls.cache_tag}_html", rendered, cls.timeout)
+
+            return rendered
+        return page

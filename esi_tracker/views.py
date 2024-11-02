@@ -6,8 +6,7 @@ from collections import OrderedDict
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
-from django.utils import timezone
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 
 from .models import ESIEndpointStatus
 from .tasks import esi_status_snapshot
@@ -24,13 +23,10 @@ def index(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
-    context = {"text": "Hello, World!"}
-    context["data"] = DataProvider.get()
-    
-    return render(request, "esi_tracker/index.html", context)
+    page = DataProvider.get_set_page_cache()
+    return HttpResponse(page)
 
 def index2(request: WSGIRequest) -> HttpResponse:
 
     esi_status_snapshot.delay()
-
-    return redirect("/esi")
+    return redirect("/esit")

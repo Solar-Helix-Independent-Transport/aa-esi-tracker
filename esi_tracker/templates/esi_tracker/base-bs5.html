@@ -24,16 +24,6 @@
         {% include 'bundles/fontawesome.html' %}
         {% include 'bundles/auth-framework-css.html' %}
 
-        <style>
-            .navbar-toggler.collapsed{
-                transform: rotate(180deg);
-            }
-
-            .nav-padding {
-                padding-top: {% header_padding_size %} !important;
-            }
-        </style>
-
         {% block extra_css %}{% endblock extra_css %}
     </head>
 
@@ -50,7 +40,6 @@
         <!-- End Body -->
 
         {% include 'bundles/jquery-js.html' %}
-        {% theme_js %}
 
         {% block extra_javascript %}
         {% endblock extra_javascript %}

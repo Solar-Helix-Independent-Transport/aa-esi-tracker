@@ -85,13 +85,16 @@ class DataProvider:
     def get_set_page_cache(cls):
         page = cache.get(f"{cls.cache_tag}_html")
         if not page:
-            data = cls.get()
-            context = {"text": "Hello, World!"}
-            context["data"] = data
-
-            rendered = render_to_string("esi_tracker/index.html", context)
-
-            cache.set(f"{cls.cache_tag}_html", rendered, cls.timeout)
-
-            return rendered
+            return cls.set_page_cache()
         return page
+    
+    @classmethod
+    def set_page_cache(cls):
+        data = cls.get()
+        context = {"text": "Hello, World!"}
+        context["data"] = data
+
+        rendered = render_to_string("esi_tracker/index.html", context)
+
+        cache.set(f"{cls.cache_tag}_html", rendered, cls.timeout)
+        return rendered

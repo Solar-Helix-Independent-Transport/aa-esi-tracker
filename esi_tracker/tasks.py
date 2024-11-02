@@ -40,3 +40,4 @@ def esi_status_snapshot():
     ESIEndpointStatus.objects.bulk_create(updates)
 
     DataProvider.set()
+    DataProvider.set_page_cache()

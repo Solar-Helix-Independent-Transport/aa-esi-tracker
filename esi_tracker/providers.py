@@ -22,8 +22,9 @@ def build_dict():
                 "name": u.endpoint.tag,
                 "endpoints": OrderedDict()
             }
-        if u.endpoint.route not in data[u.endpoint.tag]["endpoints"]:
-            data[u.endpoint.tag]["endpoints"][u.endpoint.route]={
+        route = f"{u.endpoint.method} - {u.endpoint.route}"
+        if route not in data[u.endpoint.tag]["endpoints"]:
+            data[u.endpoint.tag]["endpoints"][route]={
                 "updates":OrderedDict(),
                 "first":timezone.now(),
                 "last":start,
@@ -31,8 +32,8 @@ def build_dict():
                 "t":0
             }
         d = u.date.strftime("%Y-%m-%d %H:00")
-        if d not in data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"]:
-                data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d] = {
+        if d not in data[u.endpoint.tag]["endpoints"][route]["updates"]:
+                data[u.endpoint.tag]["endpoints"][route]["updates"][d] = {
                     "o": 0,
                     "t": 0,
                     "g": 0,
@@ -40,27 +41,27 @@ def build_dict():
                     "r": 0,
                 }
 
-        if data[u.endpoint.tag]["endpoints"][u.endpoint.route]["first"] > u.date:
-            data[u.endpoint.tag]["endpoints"][u.endpoint.route]["first"] = u.date
-        if data[u.endpoint.tag]["endpoints"][u.endpoint.route]["last"] < u.date:
-            data[u.endpoint.tag]["endpoints"][u.endpoint.route]["last"] = u.date
+        if data[u.endpoint.tag]["endpoints"][route]["first"] > u.date:
+            data[u.endpoint.tag]["endpoints"][route]["first"] = u.date
+        if data[u.endpoint.tag]["endpoints"][route]["last"] < u.date:
+            data[u.endpoint.tag]["endpoints"][route]["last"] = u.date
              
         if u.status == ESIStatus.RED:
-            data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["r"] +=1
+            data[u.endpoint.tag]["endpoints"][route]["updates"][d]["r"] +=1
         elif  u.status == ESIStatus.YELLOW:
-            data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["y"] +=1
+            data[u.endpoint.tag]["endpoints"][route]["updates"][d]["y"] +=1
         elif  u.status == ESIStatus.GREEN:
-            data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["g"] +=1
+            data[u.endpoint.tag]["endpoints"][route]["updates"][d]["g"] +=1
         
-        data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["t"] += 1
-        o = data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["o"]
-        t = data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["t"]
-        data[u.endpoint.tag]["endpoints"][u.endpoint.route]["updates"][d]["o"] = (o*(t-1)+u.status) / t
+        data[u.endpoint.tag]["endpoints"][route]["updates"][d]["t"] += 1
+        o = data[u.endpoint.tag]["endpoints"][route]["updates"][d]["o"]
+        t = data[u.endpoint.tag]["endpoints"][route]["updates"][d]["t"]
+        data[u.endpoint.tag]["endpoints"][route]["updates"][d]["o"] = (o*(t-1)+u.status) / t
 
-        data[u.endpoint.tag]["endpoints"][u.endpoint.route]["t"] += 1
-        o = data[u.endpoint.tag]["endpoints"][u.endpoint.route]["o"]
-        t = data[u.endpoint.tag]["endpoints"][u.endpoint.route]["t"]
-        data[u.endpoint.tag]["endpoints"][u.endpoint.route]["o"] = (o*(t-1)+u.status) / t
+        data[u.endpoint.tag]["endpoints"][route]["t"] += 1
+        o = data[u.endpoint.tag]["endpoints"][route]["o"]
+        t = data[u.endpoint.tag]["endpoints"][route]["t"]
+        data[u.endpoint.tag]["endpoints"][route]["o"] = (o*(t-1)+u.status) / t
 
     return data
 

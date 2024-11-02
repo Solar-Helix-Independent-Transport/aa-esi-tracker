@@ -15,7 +15,7 @@ from .providers import DataProvider
 from django.views.decorators.cache import cache_page
 
 
-@cache_page(60*5)
+# @cache_page(60*5)
 def index(request: WSGIRequest) -> HttpResponse:
     """
     Index view

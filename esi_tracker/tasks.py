@@ -12,10 +12,12 @@ from requests import get
 from .models import ESIEndpoint, ESIEndpointStatus
 from .enums import ESIStatus
 from .providers import DataProvider
+
 logger = logging.getLogger(__name__)
 
 @shared_task
 def esi_status_snapshot():
+    logger.info("Starting ESIT Snapshot")
     time = timezone.now()
     url = "https://esi.evetech.net/status.json?version=latest"
     
@@ -39,5 +41,8 @@ def esi_status_snapshot():
     
     ESIEndpointStatus.objects.bulk_create(updates)
 
+    logger.info("Setting Cache")
     DataProvider.set()
+    logger.info("Setting Page Cache")
     DataProvider.set_page_cache()
+    logger.info("Completed ESIT Snapshot")

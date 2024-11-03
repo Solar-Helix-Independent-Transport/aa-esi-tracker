@@ -15,7 +15,7 @@ from .providers import DataProvider, build_dict
 from django.views.decorators.cache import cache_page
 
 
-# @cache_page(60*5)
+@cache_page(60*5)
 def index(request: WSGIRequest) -> HttpResponse:
     """
     Index view
@@ -26,7 +26,7 @@ def index(request: WSGIRequest) -> HttpResponse:
     page = DataProvider.get_set_page_cache()
     return HttpResponse(page)
 
-# @cache_page(60*5)
+@cache_page(60*5)
 def hourly(request: WSGIRequest) -> HttpResponse:
     """
     Index view

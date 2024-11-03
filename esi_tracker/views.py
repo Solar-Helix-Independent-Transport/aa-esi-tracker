@@ -26,7 +26,7 @@ def index(request: WSGIRequest) -> HttpResponse:
     page = DataProvider.get_set_page_cache()
     return HttpResponse(page)
 
-@cache_page(60*5)
+# @cache_page(60*5)
 def hourly(request: WSGIRequest) -> HttpResponse:
     """
     Index view
@@ -34,7 +34,7 @@ def hourly(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
-    context = {"text": "Hello, World!"}
+    context = {"text": "Last 6 Hours"}
     context["data"] = build_dict(hours=6, date_string="%Y-%m-%d %H:%M")
     return render(request, "esi_tracker/index.html", context)
 

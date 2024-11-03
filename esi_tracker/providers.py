@@ -10,9 +10,11 @@ from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 
-def build_dict():
+DEFAULT_LOOKBACK = 24*14
+DEFAULT_DATESTRING = "%Y-%m-%d %H:00"
+def build_dict(hours=DEFAULT_LOOKBACK, date_string=DEFAULT_DATESTRING):
     logger.info("Rebuilding dict")
-    start = timezone.now() - timedelta(hours=24*14)
+    start = timezone.now() - timedelta(hours=hours)
     updates = ESIEndpointStatus.objects.filter(
         date__gte=start
     ).select_related("endpoint").order_by(
@@ -35,7 +37,7 @@ def build_dict():
                 "o":0,
                 "t":0
             }
-        d = u.date.strftime("%Y-%m-%d %H:00")
+        d = u.date.strftime(date_string)
         if d not in data[u.endpoint.tag]["endpoints"][route]["updates"]:
                 data[u.endpoint.tag]["endpoints"][route]["updates"][d] = {
                     "o": 0,

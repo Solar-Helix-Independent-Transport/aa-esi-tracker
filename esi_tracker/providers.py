@@ -106,7 +106,7 @@ class DataProvider:
         logger.info("Setting Page Cache")
 
         data = cls.get()
-        context = {"text": "Hello, World!"}
+        context = {"text": "Last 14days"}
         context["data"] = data
 
         rendered = render_to_string("esi_tracker/index.html", context)

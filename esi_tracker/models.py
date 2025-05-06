@@ -32,7 +32,7 @@ class ESIEndpoint(models.Model):
 
 class ESIEndpointStatus(models.Model):
     """ESI Status Snapshot"""
-    date = models.DateTimeField()
+    date = models.DateTimeField(db_index=True)
     status = models.IntegerField(choices=ESIStatus.choices())
     endpoint = models.ForeignKey(ESIEndpoint, on_delete=models.CASCADE)
 

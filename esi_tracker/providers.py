@@ -15,61 +15,64 @@ DEFAULT_DATESTRING = "%Y-%m-%d %H:00"
 def build_dict(hours=DEFAULT_LOOKBACK, date_string=DEFAULT_DATESTRING):
     logger.info("Rebuilding dict")
     start = timezone.now() - timedelta(hours=hours)
+    now = timezone.now()
     updates = ESIEndpointStatus.objects.filter(
         date__gte=start
     ).select_related("endpoint").order_by(
         "endpoint__tag",
         "endpoint__route"
+    ).values(
+        "endpoint__tag",
+        "endpoint__method",
+        "endpoint__route",
+        "date",
+        "status"
     )
+    logger.info(f"Events {updates.count()}")
     data = OrderedDict()
     for u in updates:
-        if u.endpoint.tag not in data:
-            data[u.endpoint.tag] = {
-                "name": u.endpoint.tag,
+        if u['endpoint__tag'] not in data:
+            data[u['endpoint__tag']] = {
+                "name": u['endpoint__tag'],
                 "endpoints": OrderedDict()
             }
-        route = f"{u.endpoint.method} - {u.endpoint.route}"
-        if route not in data[u.endpoint.tag]["endpoints"]:
-            data[u.endpoint.tag]["endpoints"][route]={
+        route = f"{u['endpoint__method']} - {u['endpoint__route']}"
+        if route not in data[u['endpoint__tag']]["endpoints"]:
+            data[u['endpoint__tag']]["endpoints"][route]={
                 "updates":OrderedDict(),
-                "first":timezone.now(),
+                "first":now,
                 "last":start,
                 "o":0,
                 "t":0
             }
-        d = u.date.strftime(date_string)
-        if d not in data[u.endpoint.tag]["endpoints"][route]["updates"]:
-                data[u.endpoint.tag]["endpoints"][route]["updates"][d] = {
+        d = u['date'].strftime(date_string)
+        if d not in data[u['endpoint__tag']]["endpoints"][route]["updates"]:
+                data[u['endpoint__tag']]["endpoints"][route]["updates"][d] = {
                     "o": 0,
                     "t": 0,
                     "g": 0,
                     "y": 0,
                     "r": 0,
                 }
-
-        if data[u.endpoint.tag]["endpoints"][route]["first"] > u.date:
-            data[u.endpoint.tag]["endpoints"][route]["first"] = u.date
-        if data[u.endpoint.tag]["endpoints"][route]["last"] < u.date:
-            data[u.endpoint.tag]["endpoints"][route]["last"] = u.date
-             
-        if u.status == ESIStatus.RED:
-            data[u.endpoint.tag]["endpoints"][route]["updates"][d]["r"] +=1
-        elif  u.status == ESIStatus.YELLOW:
-            data[u.endpoint.tag]["endpoints"][route]["updates"][d]["y"] +=1
-        elif  u.status == ESIStatus.GREEN:
-            data[u.endpoint.tag]["endpoints"][route]["updates"][d]["g"] +=1
-        
-        data[u.endpoint.tag]["endpoints"][route]["updates"][d]["t"] += 1
-        o = data[u.endpoint.tag]["endpoints"][route]["updates"][d]["o"]
-        t = data[u.endpoint.tag]["endpoints"][route]["updates"][d]["t"]
-        data[u.endpoint.tag]["endpoints"][route]["updates"][d]["o"] = (o*(t-1)+u.status) / t
-
-        data[u.endpoint.tag]["endpoints"][route]["t"] += 1
-        o = data[u.endpoint.tag]["endpoints"][route]["o"]
-        t = data[u.endpoint.tag]["endpoints"][route]["t"]
-        data[u.endpoint.tag]["endpoints"][route]["o"] = (o*(t-1)+u.status) / t
+        if data[u['endpoint__tag']]["endpoints"][route]["first"] > u['date']:
+            data[u['endpoint__tag']]["endpoints"][route]["first"] = u['date']
+        if data[u['endpoint__tag']]["endpoints"][route]["last"] < u['date']:
+            data[u['endpoint__tag']]["endpoints"][route]["last"] = u['date']
+        if u['status'] == ESIStatus.RED:
+            data[u['endpoint__tag']]["endpoints"][route]["updates"][d]["r"] +=1
+        elif  u['status'] == ESIStatus.YELLOW:
+            data[u['endpoint__tag']]["endpoints"][route]["updates"][d]["y"] +=1
+        elif  u['status'] == ESIStatus.GREEN:
+            data[u['endpoint__tag']]["endpoints"][route]["updates"][d]["g"] +=1
+        data[u['endpoint__tag']]["endpoints"][route]["updates"][d]["t"] += 1
+        o = data[u['endpoint__tag']]["endpoints"][route]["updates"][d]["o"]
+        t = data[u['endpoint__tag']]["endpoints"][route]["updates"][d]["t"]
+        data[u['endpoint__tag']]["endpoints"][route]["updates"][d]["o"] = (o*(t-1)+u['status']) / t
+        data[u['endpoint__tag']]["endpoints"][route]["t"] += 1
+        o = data[u['endpoint__tag']]["endpoints"][route]["o"]
+        t = data[u['endpoint__tag']]["endpoints"][route]["t"]
+        data[u['endpoint__tag']]["endpoints"][route]["o"] = (o*(t-1)+u['status']) / t
     logger.info("Finished dict")
-
     return data
 
 

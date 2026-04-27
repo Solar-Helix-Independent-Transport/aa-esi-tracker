@@ -36,7 +36,7 @@ dynamic = [
     "version",
 ]
 dependencies = [
-    "allianceauth<5,>=4.3.1",
+    "allianceauth>=4.3.1",
 ]
 urls.Changelog = "https://github.com/ppfeufer/aa-est-tracker/blob/master/CHANGELOG.md"
 urls."Issue / Bug Reports" = "https://github.com/ppfeufer/aa-est-tracker/issues"
